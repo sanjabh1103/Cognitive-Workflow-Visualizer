@@ -129,21 +129,21 @@ export const OutcomeTracker: React.FC<OutcomeTrackerProps> = ({
         {
           id: '1',
           title: 'Initial Decision Reflection',
-          content: 'Today I made the decision to transition to software development. I feel both excited and nervous about the journey ahead. The NeuroFlow analysis helped me see potential biases in my thinking, particularly optimism bias about how quickly I might land a job.',
+          content: `Today I made the decision to transition to software development. I feel both excited and nervous about the journey ahead. The NeuroFlow analysis helped me see potential biases in my thinking, particularly optimism bias about how quickly I might land a job.`,
           mood_rating: 8,
           created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
         },
         {
           id: '2',
           title: 'Midway Checkpoint',
-          content: 'Three months into my coding bootcamp. The learning curve has been steeper than I expected, but I\'m making progress. The financial strain is real, but manageable. I'm starting to build a portfolio of projects and making connections in the industry.',
+          content: `Three months into my coding bootcamp. The learning curve has been steeper than I expected, but I'm making progress. The financial strain is real, but manageable. I'm starting to build a portfolio of projects and making connections in the industry.`,
           mood_rating: 6,
           created_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString()
         },
         {
           id: '3',
           title: 'Outcome Reflection',
-          content: 'I\'ve completed the bootcamp and landed my first developer role! The salary is slightly lower than projected, but the company culture and growth opportunities are excellent. Looking back, the decision was absolutely worth it despite the challenges.',
+          content: `I've completed the bootcamp and landed my first developer role! The salary is slightly lower than projected, but the company culture and growth opportunities are excellent. Looking back, the decision was absolutely worth it despite the challenges.`,
           mood_rating: 9,
           created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
         }
