@@ -1,18 +1,21 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Brain, 
-  ArrowRight, 
-  Target, 
-  AlertTriangle, 
+import {
+  Brain,
+  ArrowRight,
+  Target,
+  AlertTriangle,
   TrendingUp,
   Users,
   Clock,
-  DollarSign
+  DollarSign,
+  Loader
 } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
+import { dbService } from '../../lib/supabase';
+import { useAuth } from '../../hooks/useAuth';
 
 interface WorkflowNode {
   id: string;
@@ -30,77 +33,86 @@ interface WorkflowVisualizerProps {
 }
 
 export const WorkflowVisualizer: React.FC<WorkflowVisualizerProps> = ({ decisionId }) => {
+  const { user } = useAuth();
   const [selectedNode, setSelectedNode] = useState<WorkflowNode | null>(null);
   const [viewMode, setViewMode] = useState<'overview' | 'detailed'>('overview');
+  const [workflowNodes, setWorkflowNodes] = useState<WorkflowNode[]>([]);
+  const [decision, setDecision] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock workflow data
-  const workflowNodes: WorkflowNode[] = [
-    {
-      id: 'decision-1',
-      type: 'decision',
-      title: 'Career Change Decision',
-      description: 'Should I transition from marketing to software development?',
-      position: { x: 400, y: 100 },
-      data: {
-        complexity: 8,
-        stakeholders: ['Partner', 'Current Team', 'Family'],
-        urgency: 'medium'
+  // Load workflow data from Supabase
+  useEffect(() => {
+    const loadWorkflowData = async () => {
+      if (!user || !decisionId) return;
+
+      try {
+        setLoading(true);
+        const decisionData = await dbService.getDecision(decisionId);
+        setDecision(decisionData);
+
+        // Convert database data to workflow nodes
+        const nodes: WorkflowNode[] = [];
+
+        // Add central decision node
+        nodes.push({
+          id: 'decision',
+          type: 'decision',
+          title: decisionData.title,
+          description: decisionData.description || decisionData.core_question,
+          position: { x: 400, y: 100 },
+          data: {
+            complexity: decisionData.complexity_score,
+            stakeholders: decisionData.stakeholders,
+            urgency: 'medium'
+          }
+        });
+
+        // Add decision paths
+        if (decisionData.decision_paths) {
+          decisionData.decision_paths.forEach((path: any, index: number) => {
+            nodes.push({
+              id: `path-${path.id}`,
+              type: 'path',
+              title: path.title,
+              description: path.description,
+              probability: path.probability_success,
+              position: { x: 200 + (index * 200), y: 300 },
+              data: {
+                duration: 'TBD',
+                cost: 'TBD',
+                risk: path.reversibility === 'permanent' ? 'high' : 'medium'
+              }
+            });
+          });
+        }
+
+        // Add outcomes if available
+        if (decisionData.predicted_outcomes) {
+          decisionData.predicted_outcomes.forEach((outcome: any, index: number) => {
+            nodes.push({
+              id: `outcome-${outcome.id}`,
+              type: 'outcome',
+              title: 'Predicted Outcome',
+              description: 'AI-predicted results',
+              probability: 0.7,
+              impact: 7,
+              position: { x: 200 + (index * 200), y: 500 }
+            });
+          });
+        }
+
+        setWorkflowNodes(nodes);
+      } catch (err) {
+        console.error('Error loading workflow:', err);
+        setError('Failed to load workflow data');
+      } finally {
+        setLoading(false);
       }
-    },
-    {
-      id: 'path-1',
-      type: 'path',
-      title: 'Full-Time Bootcamp',
-      description: 'Quit job and attend intensive coding bootcamp',
-      probability: 75,
-      position: { x: 200, y: 300 },
-      data: {
-        duration: '6 months',
-        cost: '$15,000',
-        risk: 'high'
-      }
-    },
-    {
-      id: 'path-2',
-      type: 'path',
-      title: 'Part-Time Learning',
-      description: 'Learn programming while maintaining current job',
-      probability: 60,
-      position: { x: 600, y: 300 },
-      data: {
-        duration: '18 months',
-        cost: '$3,000',
-        risk: 'low'
-      }
-    },
-    {
-      id: 'outcome-1',
-      type: 'outcome',
-      title: 'Tech Career Success',
-      description: 'Successfully transition to tech role',
-      probability: 80,
-      impact: 9,
-      position: { x: 200, y: 500 }
-    },
-    {
-      id: 'outcome-2',
-      type: 'outcome',
-      title: 'Gradual Transition',
-      description: 'Slowly build skills while maintaining stability',
-      probability: 70,
-      impact: 7,
-      position: { x: 600, y: 500 }
-    },
-    {
-      id: 'risk-1',
-      type: 'risk',
-      title: 'Financial Strain',
-      description: 'Income loss during transition period',
-      probability: 60,
-      impact: 8,
-      position: { x: 100, y: 400 }
-    }
-  ];
+    };
+
+    loadWorkflowData();
+  }, [decisionId, user]);
 
   const getNodeIcon = (type: string) => {
     switch (type) {
@@ -170,7 +182,22 @@ export const WorkflowVisualizer: React.FC<WorkflowVisualizerProps> = ({ decision
         <div className="lg:col-span-2">
           <Card>
             <CardContent className="p-0">
-              <div className="relative bg-gradient-to-br from-indigo-50 to-purple-50 h-96 lg:h-[600px] overflow-hidden">
+              {loading ? (
+                <div className="relative bg-gradient-to-br from-indigo-50 to-purple-50 h-96 lg:h-[600px] flex items-center justify-center">
+                  <div className="text-center">
+                    <Loader className="h-8 w-8 animate-spin text-indigo-600 mx-auto mb-4" />
+                    <p className="text-gray-600">Loading workflow...</p>
+                  </div>
+                </div>
+              ) : error ? (
+                <div className="relative bg-gradient-to-br from-red-50 to-pink-50 h-96 lg:h-[600px] flex items-center justify-center">
+                  <div className="text-center">
+                    <AlertTriangle className="h-8 w-8 text-red-600 mx-auto mb-4" />
+                    <p className="text-red-600">{error}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative bg-gradient-to-br from-indigo-50 to-purple-50 h-96 lg:h-[600px] overflow-hidden">
                 <svg width="100%" height="100%" className="absolute inset-0">
                   {/* Connection Lines */}
                   <defs>
@@ -283,7 +310,8 @@ export const WorkflowVisualizer: React.FC<WorkflowVisualizerProps> = ({ decision
                     </motion.div>
                   );
                 })}
-              </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

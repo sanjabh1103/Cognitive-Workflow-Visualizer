@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  TrendingUp, 
-  Target, 
-  Calendar, 
-  Star, 
+import {
+  TrendingUp,
+  Target,
+  Calendar,
+  Star,
   BookOpen,
   BarChart3,
   CheckCircle,
@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { ProgressBar } from '../ui/ProgressBar';
+import { supabase } from '../../lib/supabase';
 
 interface PredictedOutcome {
   id: string;
@@ -62,93 +63,47 @@ export const OutcomeTracker: React.FC<OutcomeTrackerProps> = ({
     overall_quality: 0.76
   });
 
-  // Mock data for demonstration
+  // Load outcome data from Supabase
   useEffect(() => {
-    // Simulated API call to fetch outcomes
-    setTimeout(() => {
-      setPredictedOutcome({
-        id: '1',
-        path_id: pathId || '1',
-        financial_impact: {
-          short_term: 'Initial investment of $15,000',
-          medium_term: 'Potential 20% salary increase within 1 year',
-          long_term: 'Significant career earning potential increase'
-        },
-        emotional_impact: {
-          stress: 'Temporary increase during transition',
-          satisfaction: 'High potential for increased job satisfaction',
-          confidence: 'Initial decrease followed by significant growth'
-        },
-        relationship_impact: {
-          family: 'Short-term strain due to time commitment',
-          professional: 'New network development, temporary loss of current network'
-        },
-        personal_growth: {
-          skills: ['Technical skills', 'Problem-solving', 'Adaptability'],
-          opportunities: ['Career advancement', 'Industry change', 'Remote work']
-        },
-        time_horizon: {
-          short_term: '6 months of intensive learning',
-          medium_term: '1 year to establish in new role',
-          long_term: '3+ years of career development'
-        },
-        confidence_score: 0.75
-      });
+    const loadOutcomeData = async () => {
+      if (!decisionId) return;
 
-      setActualOutcome({
-        id: '1',
-        path_id: pathId || '1',
-        financial_result: {
-          short_term: 'Investment of $12,000 (less than expected)',
-          medium_term: '15% salary increase after 9 months',
-          long_term: 'On track for projected career earnings'
-        },
-        emotional_result: {
-          stress: 'Higher than anticipated during transition',
-          satisfaction: 'Exceeded expectations - very fulfilling',
-          confidence: 'Grew faster than expected'
-        },
-        relationship_result: {
-          family: 'Supportive throughout the process',
-          professional: 'Maintained more connections than expected'
-        },
-        personal_growth_result: {
-          skills: ['Technical skills exceeded expectations', 'Leadership opportunities'],
-          opportunities: ['Remote work options abundant', 'More diverse roles available']
-        },
-        satisfaction_score: 8,
-        lessons_learned: [
-          'Start networking earlier in the transition',
-          'Focus on fewer technologies at first',
-          'Set clearer boundaries for work-life balance'
-        ],
-        recorded_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
-      });
+      try {
+        setLoading(true);
 
-      setJournalEntries([
-        {
-          id: '1',
-          title: 'Initial Decision Reflection',
-          content: `Today I made the decision to transition to software development. I feel both excited and nervous about the journey ahead. The NeuroFlow analysis helped me see potential biases in my thinking, particularly optimism bias about how quickly I might land a job.`,
-          mood_rating: 8,
-          created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: '2',
-          title: 'Midway Checkpoint',
-          content: `Three months into my coding bootcamp. The learning curve has been steeper than I expected, but I'm making progress. The financial strain is real, but manageable. I'm starting to build a portfolio of projects and making connections in the industry.`,
-          mood_rating: 6,
-          created_at: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: '3',
-          title: 'Outcome Reflection',
-          content: `I've completed the bootcamp and landed my first developer role! The salary is slightly lower than projected, but the company culture and growth opportunities are excellent. Looking back, the decision was absolutely worth it despite the challenges.`,
-          mood_rating: 9,
-          created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+        // Load predicted outcomes
+        const { data: predictedData, error: predictedError } = await supabase
+          .from('predicted_outcomes')
+          .select('*')
+          .eq('path_id', pathId || '1')
+          .single();
+
+        if (!predictedError && predictedData) {
+          setPredictedOutcome(predictedData);
         }
-      ]);
-    }, 500);
+
+        // Load actual outcomes
+        const { data: actualData, error: actualError } = await supabase
+          .from('actual_outcomes')
+          .select('*')
+          .eq('path_id', pathId || '1')
+          .single();
+
+        if (!actualError && actualData) {
+          setActualOutcome(actualData);
+        }
+
+        // Load journal entries (mock for now - would need a journal_entries table)
+        setJournalEntries([]);
+
+      } catch (err) {
+        console.error('Error loading outcome data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadOutcomeData();
   }, [decisionId, pathId]);
 
   const getComparisonColor = (category: string) => {

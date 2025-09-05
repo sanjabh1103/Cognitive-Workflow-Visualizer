@@ -57,59 +57,104 @@ const stats = [
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-          <div className="text-center">
+    <div className="min-h-screen relative">
+      {/* Full-width background image with overlay */}
+      <div
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80')`,
+        }}
+      />
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+
+      {/* Hero Section with Glassmorphism */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="text-center max-w-5xl mx-auto"
+        >
+          {/* Glassmorphism Card */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl"
+          >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="space-y-6"
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="flex items-center justify-center space-x-3 mb-8"
             >
-              <div className="flex items-center justify-center space-x-2 mb-6">
-                <div className="p-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl">
-                  <Brain className="h-8 w-8 text-white" />
-                </div>
-                <span className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                  NeuroFlow Designer
-                </span>
+              <div className="p-4 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-2xl backdrop-blur-sm border border-white/10">
+                <Brain className="h-10 w-10 text-white" />
               </div>
-              
-              <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                The World's First
-                <span className="block bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                  Cognitive Operating System
-                </span>
-              </h1>
-              
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-                Transform how you make complex decisions through AI-powered workflow visualization, 
-                collective intelligence, emotional mapping, and temporal impact modeling.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <Link to="/dashboard">
-                  <Button size="lg" className="w-full sm:w-auto">
+              <span className="text-2xl sm:text-3xl lg:text-4xl font-serif font-light text-white tracking-wide">
+                NeuroFlow Designer
+              </span>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="text-4xl sm:text-5xl lg:text-7xl font-serif font-light text-white mb-6 leading-tight"
+            >
+              The World's First
+              <span className="block bg-gradient-to-r from-indigo-200 to-purple-200 bg-clip-text text-transparent font-medium">
+                Cognitive Operating System
+              </span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="text-lg sm:text-xl lg:text-2xl text-white/90 max-w-4xl mx-auto mb-12 font-light leading-relaxed"
+            >
+              Transform how you make complex decisions through AI-powered workflow visualization,
+              collective intelligence, emotional mapping, and temporal impact modeling.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.0 }}
+              className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6"
+            >
+              <Link to="/dashboard">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30 transition-all duration-300 px-8 py-4 text-lg font-medium"
+                  >
                     Start Your Journey
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
-                </Link>
-                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                </motion.div>
+              </Link>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto bg-transparent border-2 border-white/50 text-white hover:bg-white/10 backdrop-blur-sm transition-all duration-300 px-8 py-4 text-lg font-medium"
+                >
                   Watch Demo
                 </Button>
-              </div>
+              </motion.div>
             </motion.div>
-          </div>
-        </div>
-        
-        {/* Background Elements */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-0 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-          <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
-          <div className="absolute bottom-0 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-2000"></div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Stats Section */}
@@ -135,46 +180,61 @@ export const LandingPage: React.FC = () => {
       </div>
 
       {/* Features Section */}
-      <div className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Powerful Features for Better Decisions
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Combining cutting-edge AI with cognitive science to enhance your decision-making process
-              </p>
-            </motion.div>
-          </div>
-          
+      <div className="py-20 bg-gradient-to-br from-slate-50 to-gray-100 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }} />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light text-gray-900 mb-6">
+              Powerful Features for
+              <span className="block font-medium bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                Better Decisions
+              </span>
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Combining cutting-edge AI with cognitive science to enhance your decision-making process
+            </p>
+          </motion.div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -8 }}
+                className="group"
               >
-                <Card hover gradient className="h-full">
-                  <CardHeader>
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl">
-                        <feature.icon className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {feature.title}
-                      </h3>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">{feature.description}</p>
-                  </CardContent>
-                </Card>
+                <div className="h-full backdrop-blur-sm bg-white/80 border border-white/20 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 group-hover:bg-white/90">
+                  <div className="flex items-center space-x-4 mb-6">
+                    <motion.div
+                      className="p-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl shadow-lg"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                      <feature.icon className="h-7 w-7 text-white" />
+                    </motion.div>
+                    <h3 className="text-xl font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors duration-300">
+                      {feature.title}
+                    </h3>
+                  </div>
+                  <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                    {feature.description}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -182,32 +242,70 @@ export const LandingPage: React.FC = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="py-20 bg-gradient-to-r from-indigo-600 to-purple-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="py-20 bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-40 h-40 bg-purple-300/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-400/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="space-y-8"
           >
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
-              Ready to Transform Your Decision-Making?
-            </h2>
-            <p className="text-lg text-indigo-100 max-w-2xl mx-auto mb-8">
-              Join thousands of users who have improved their decision outcomes by 40% 
-              and reduced decision time by 60%.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <Link to="/dashboard">
-                <Button variant="secondary" size="lg" className="w-full sm:w-auto">
-                  Get Started Free
-                  <Sparkles className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Button variant="outline" size="lg" className="w-full sm:w-auto bg-transparent border-white text-white hover:bg-white hover:text-indigo-600">
-                Book a Demo
-              </Button>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 sm:p-12 max-w-4xl mx-auto"
+            >
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light text-white mb-6 leading-tight">
+                Ready to Transform Your
+                <span className="block font-medium bg-gradient-to-r from-indigo-200 to-purple-200 bg-clip-text text-transparent">
+                  Decision-Making?
+                </span>
+              </h2>
+              <p className="text-lg sm:text-xl text-white/90 max-w-3xl mx-auto mb-8 leading-relaxed">
+                Join thousands of users who have improved their decision outcomes by 40%
+                and reduced decision time by 60%.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <Link to="/dashboard">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  >
+                    <Button
+                      size="lg"
+                      className="w-full sm:w-auto bg-white text-indigo-600 hover:bg-white/90 font-semibold px-8 py-4 text-lg shadow-xl hover:shadow-2xl transition-all duration-300"
+                    >
+                      Get Started Free
+                      <Sparkles className="ml-2 h-5 w-5" />
+                    </Button>
+                  </motion.div>
+                </Link>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full sm:w-auto bg-transparent border-2 border-white/60 text-white hover:bg-white/10 backdrop-blur-sm font-semibold px-8 py-4 text-lg transition-all duration-300"
+                  >
+                    Book a Demo
+                  </Button>
+                </motion.div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>

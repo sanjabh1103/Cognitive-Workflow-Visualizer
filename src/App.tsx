@@ -6,6 +6,7 @@ import { Dashboard } from './pages/Dashboard';
 import { CreateDecision } from './pages/CreateDecision';
 import { DecisionDetail } from './pages/DecisionDetail';
 import { PendingFeatures } from './pages/PendingFeatures';
+import { TestPage } from './test-page';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/community" element={<Dashboard />} />
           <Route path="/settings" element={<Dashboard />} />
           <Route path="/pending-features" element={<PendingFeatures />} />
+          <Route path="/test" element={<TestPage />} />
         </Routes>
         <Toaster 
           position="top-right"
